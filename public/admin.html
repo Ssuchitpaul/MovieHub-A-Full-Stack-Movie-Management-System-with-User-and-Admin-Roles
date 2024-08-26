@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Management</title>
+    <style>
+        body{
+            background-color: rgb(13, 97, 97);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+        .button {
+            padding: 5px 10px;
+            margin: 5px;
+            border: none;
+            color: white;
+            cursor: pointer;
+        }
+        .button.delete {
+            background-color: #dc3545;
+        }
+        .button.update {
+            background-color: #28a745;
+        }
+        .form-container {
+            margin-bottom: 20px;
+        }
+        .form-container input {
+            margin-right: 10px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+        button {
+            background-color: #4CAF50; /* Green */
+            color: white;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049; /* Darker green */
+        }
+    </style>
+</head>
+<body>
+    <button id="out">logout</button>
+    <h1>Movie Requests</h1>
+    <table id="requestsTable">
+        <thead>
+            <tr>
+                <th>User ID</th>
+                <th>Movie ID</th>
+                <th>Movie</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Table rows will be populated here -->
+        </tbody>
+    </table>
+
+    <h1>User Management</h1>
+
+    <!-- Form for Creating New User -->
+    <div class="form-container">
+        <h2>Create New User</h2>
+        <form id="createUserForm">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required>
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
+            <label for="role">Role:</label>
+            <select id="role" name="role" required>
+                <option value="admin">admin</option>
+                <option value="user">user</option>
+            </select>
+            <input type="submit" value="Create User">
+        </form>
+    </div>
+
+    <!-- Table for Displaying Users -->
+    <h2>Users List</h2>
+    <table id="userTable">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- User rows will be inserted here -->
+        </tbody>
+    </table>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+    fetchRequests();
+});
+
+function fetchRequests() {
+    fetch('http://localhost:8080/req')
+        .then(response => response.json())
+        .then(data => {
+            const tableBody = document.querySelector('#requestsTable tbody');
+            tableBody.innerHTML = ''; // Clear any existing rows
+
+            data.forEach(request => {
+                const row = document.createElement('tr');
+                row.setAttribute('data-userid', request.userid);
+                row.setAttribute('data-movieid', request.movieid);
+
+                row.innerHTML = `
+                    <td>${request.userid}</td>
+                    <td>${request.movieid}</td>
+                    <td>${request.movie}</td>
+                    <td class="status">${request.status}</td>
+                    <td>
+                        ${request.status === 'Pending' ? 
+                            `<button onclick="approveRequest(${request.userid}, ${request.movieid})">Approve</button>` 
+                            : ''}
+                    </td>
+                `;
+
+                tableBody.appendChild(row);
+            });
+        })
+        .catch(error => {
+            console.error('Error fetching requests:', error);
+        });
+}
+
+function approveRequest(userid, movieid) {
+    fetch('http://localhost:8080/req', {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            userid: userid,
+            movieid: movieid,
+            status: 'approved'
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Success:', data);
+
+        // Find and update the row in the table
+        const row = document.querySelector(`tr[data-userid='${userid}'][data-movieid='${movieid}']`);
+        if (row) {
+            row.querySelector('.status').innerText = 'Approved';
+            row.querySelector('button').remove(); // Remove the approve button
+        }
+
+        // Optionally, remove the row after updating status
+        // If you want to remove the row completely from the table, uncomment the next line
+        // row.remove();
+
+    })
+    .catch(error => {
+        console.error('Error updating request:', error);
+    });
+}
+
+        async function fetchUsers() {
+            try {
+                const response = await fetch('http://localhost:8080/user');
+                if (!response.ok) {
+                    throw new Error('Failed to fetch users');
+                }
+                const users = await response.json();
+                const tableBody = document.querySelector('#userTable tbody');
+                tableBody.innerHTML = '';
+
+                users.forEach(user => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${user.id}</td>
+                        <td>${user.username}</td>
+                        <td>${user.email}</td>
+                        <td>${user.role}</td>
+                        <td>
+                            <button class="button update" onclick="updateUser(${user.id})">Update</button>
+                            <button class="button delete" onclick="deleteUser(${user.id})">Delete</button>
+                        </td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+            } catch (error) {
+                console.error('Error fetching users:', error);
+            }
+        }
+
+        async function createUser(event) {
+            event.preventDefault();
+
+            const username = document.getElementById('username').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const role = document.getElementById('role').value;
+
+            const userData = { username, email, password, role };
+
+            try {
+                const response = await fetch('http://localhost:8080/user', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(userData)
+                });
+
+                if (response.ok) {
+                    alert('User created successfully');
+                    fetchUsers(); // Refresh the user list
+                    document.getElementById('createUserForm').reset(); // Clear the form
+                } else {
+                    alert('Failed to create user');
+                }
+            } catch (error) {
+                console.error('Error creating user:', error);
+                alert('Error creating user');
+            }
+        }
+
+        async function updateUser(userId) {
+            // Open a prompt or a modal to get new user details
+            const newUsername = prompt('Enter new username:');
+            const newEmail = prompt('Enter new email:');
+            const newPassword = prompt('Enter new password:');
+            const newRole = prompt('Enter new role:');
+
+            const updatedData = { username: newUsername, email: newEmail, password: newPassword, role: newRole };
+
+            try {
+                const response = await fetch(`http://localhost:8080/user/${userId}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(updatedData)
+                });
+
+                if (response.ok) {
+                    alert('User updated successfully');
+                    fetchUsers(); // Refresh the user list
+                } else {
+                    alert('Failed to update user');
+                }
+            } catch (error) {
+                console.error('Error updating user:', error);
+                alert('Error updating user');
+            }
+        }
+
+        async function deleteUser(userId) {
+            try {
+                const response = await fetch(`http://localhost:8080/user/${userId}`, {
+                    method: 'DELETE'
+                });
+
+                if (response.ok) {
+                    alert('User deleted successfully');
+                    fetchUsers(); // Refresh the user list
+                } else {
+                    alert('Failed to delete user');
+                }
+            } catch (error) {
+                console.error('Error deleting user:', error);
+                alert('Error deleting user');
+            }
+        }
+
+        // Attach the form submit event
+        document.getElementById('createUserForm').addEventListener('submit', createUser);
+
+        // Fetch users when the page loads
+        fetchUsers();
+
+    document.getElementById('out').addEventListener('click',()=>
+    {
+        window.location.href = 'index.html';
+
+    });
+    </script>
+</body>
+</html>

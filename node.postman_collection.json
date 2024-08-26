@@ -1,0 +1,204 @@
+{
+	"info": {
+		"_postman_id": "34263d43-6068-4334-8d24-b7b736858d4d",
+		"name": "node",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "37418855"
+	},
+	"item": [
+		{
+			"name": "http://localhost:8080/movies",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "inherit"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"title\": \"Inception (Updated)\",\n    \"director\": \"Christopher Nolan\",\n    \"genre\": \"Sci-Fi\",\n    \"release_year\": 2010,\n    \"duration_minutes\": 148,\n    \"rating\": 9.0,\n    \"poster_image\": \"https://example.com/inception_updated.jpg\",\n    \"box_office_total\": 850000000.00\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/movies",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"movies"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8080/movies/2",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "inherit"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"title\": \"Inception (Updated)\",\n    \"director\": \"Christopher Nolan\",\n    \"genre\": \"Sci-Fi\",\n    \"release_year\": 2010,\n    \"duration_minutes\": 148,\n    \"rating\": 9.0,\n    \"poster_image\": \"https://example.com/inception_updated.jpg\",\n    \"box_office_total\": 850000000.00\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/movies/2",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"movies",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8080/movies",
+			"request": {
+				"auth": {
+					"type": "inherit"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"id\":10,\n    \"title\": \"hulk\",\n    \"director\": \"Christopher Nolan\",\n    \"genre\": \"Sci-Fi\",\n    \"release_year\": 2010,\n    \"duration_minutes\": 148,\n    \"rating\": 9.0,\n    \"poster_image\": \"https://example.com/inception_updated.jpg\",\n    \"box_office_total\": 850000000.00\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/movies",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"movies"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8080/movies/2",
+			"request": {
+				"auth": {
+					"type": "inherit"
+				},
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"title\": \"hulk (updated)\",\n    \"director\": \"Christopher Nolan\",\n    \"genre\": \"Sci-Fi\",\n    \"release_year\": 2010,\n    \"duration_minutes\": 148,\n    \"rating\": 9.0,\n    \"poster_image\": \"https://example.com/inception_updated.jpg\",\n    \"box_office_total\": 850000000.00\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/movies/2",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"movies",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8080/movies/6",
+			"request": {
+				"auth": {
+					"type": "inherit"
+				},
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"title\": \"hulk (updated)\",\n    \"director\": \"Christopher Nolan\",\n    \"genre\": \"Sci-Fi\",\n    \"release_year\": 2010,\n    \"duration_minutes\": 148,\n    \"rating\": 9.0,\n    \"poster_image\": \"https://example.com/inception_updated.jpg\",\n    \"box_office_total\": 850000000.00\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/movies/6",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"movies",
+						"6"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
